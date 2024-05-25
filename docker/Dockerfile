@@ -1,20 +1,18 @@
 # Use an official Python runtime as a parent image
-FROM python:3.12.3
+FROM python:3.9-slim-buster
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements file into the container at /app
-COPY requirements.txt ./
+# Copy requirements file to the container
+COPY requirements.txt ./ 
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Install packages with user permissions and update PYTHONPATH
+RUN pip install --user -r requirements.txt \
+    && ENV PYTHONPATH="${PYTHONPATH}:/root/.local/lib/python3.9/site-packages"
 
-# Copy the rest of your application's source code into the container at /app
+# Copy the application code
 COPY . .
-
-# Make port 80 available to the world outside this container
-EXPOSE 80
 
 # Define environment variable
 ENV NAME World
